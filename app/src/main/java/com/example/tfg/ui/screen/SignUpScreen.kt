@@ -31,6 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tfg.R
+import com.example.tfg.data.remote.RetrofitClient
+import com.example.tfg.data.remote.model.User
 import com.example.tfg.ui.theme.Amber300
 import com.example.tfg.ui.theme.DarkText
 import com.example.tfg.ui.theme.Purple500
@@ -120,18 +122,38 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
         Button(
             colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta),
             onClick = {
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Navegar
-                        Log.i("Sign Up", "Registro correcto")
-                        navigateToHome()
-                    } else {
-                        // Error
-                        Log.i("Sign Up", "Registro incorrecto")
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val user = auth.currentUser
+                            val uuid = user?.uid ?: ""
+                            val request = User(email = email, uuid = uuid)
+
+                            // Llamada a tu servidor Node
+                            val call = RetrofitClient.api.registerUser(request)
+                            call.enqueue(object : retrofit2.Callback<Void> {
+                                override fun onResponse(call: retrofit2.Call<Void>, response: retrofit2.Response<Void>) {
+                                    if (response.isSuccessful) {
+                                        Log.i("Retrofit", "Usuario registrado en PostgreSQL")
+                                    } else {
+                                        Log.e("Retrofit", "Error al registrar en backend: ${response.code()}")
+                                    }
+                                }
+
+                                override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
+                                    Log.e("Retrofit", "Fallo al conectar con el backend", t)
+                                }
+                            })
+
+                            Log.i("Sign Up", "Registro correcto en Firebase")
+                            navigateToHome()
+                        } else {
+                            Log.i("Sign Up", "Registro incorrecto")
+                        }
                     }
-                }
             }
-        ) {
+        )
+        {
             Text("Sign up", color = White)
         }
     }
