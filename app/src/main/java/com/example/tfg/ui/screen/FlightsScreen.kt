@@ -26,7 +26,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,12 +45,19 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
+@Preview
+@Composable
+fun FlightsScreenPreview() {
+    FlightsScreen(navigateBack = {}, navigateToHome = {}, navigateToFlights = {})
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navigateBack: () -> Unit, navigateToHome: () -> Unit, navigateToFlights: () -> Unit) {
-    var presses by remember { mutableIntStateOf(0) }
+fun FlightsScreen(
+    navigateBack: () -> Unit,
+    navigateToHome: () -> Unit,
+    navigateToFlights: () -> Unit
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var username by remember { mutableStateOf("Cargando username...") }
 
@@ -83,7 +89,7 @@ fun HomeScreen(navigateBack: () -> Unit, navigateToHome: () -> Unit, navigateToF
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
 
         topBar = {
-           TopAppBar(
+            TopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
@@ -141,7 +147,7 @@ fun HomeScreen(navigateBack: () -> Unit, navigateToHome: () -> Unit, navigateToF
             horizontalAlignment = Alignment.CenterHorizontally,
 
 
-        ) {
+            ) {
             Spacer(modifier = Modifier.height(10.dp))
             Card(
                 colors = CardDefaults.cardColors(

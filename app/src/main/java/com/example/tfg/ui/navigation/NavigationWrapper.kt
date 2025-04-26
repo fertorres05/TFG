@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.tfg.ui.screen.FlightsScreen
 import com.example.tfg.ui.screen.HomeScreen
 import com.example.tfg.ui.screen.InitialScreen
 import com.example.tfg.ui.screen.LoginScreen
@@ -40,7 +41,20 @@ fun NavigationWrapper(auth: FirebaseAuth) {
             )
         }
         composable<Home> {
-            HomeScreen() // Suponiendo que ya tienes una pantalla HomeScreen
+            HomeScreen(
+                navigateBack = { navController.navigate(Initial){popUpTo(Initial){inclusive = true}} },
+                navigateToHome = { navController.navigate(Home) },
+                navigateToFlights = { navController.navigate(Flights) }
+            )
+        }
+        composable<Flights> {
+            FlightsScreen(
+                navigateBack = { navController.navigate(Initial){popUpTo(Initial){inclusive = true}} },
+                navigateToHome = { navController.navigate(Home) },
+                navigateToFlights = { navController.navigate(Flights) }
+
+            )
         }
     }
 }
+

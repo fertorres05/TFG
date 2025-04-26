@@ -47,14 +47,19 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
 
     var password by remember { mutableStateOf("") }
 
+    var username by remember { mutableStateOf("") }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(
-                listOf(Purple500, Purple700),
-                startY = 0f,
-                endY = 800f
-            ))
+            .background(
+                Brush.verticalGradient(
+                    listOf(Purple500, Purple700),
+                    startY = 0f,
+                    endY = 800f
+                )
+            )
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
 
@@ -117,6 +122,28 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
             ),
             label = { Text("Password") }
         )
+
+        Spacer(Modifier.height(48.dp))
+
+        Text("Username:", color = White, fontWeight = FontWeight.Bold, fontSize = 40.sp)
+        TextField(
+            value = username,
+            onValueChange = { username = it },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = White,
+                focusedContainerColor = SelectedField,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Amber300,
+                cursorColor = Amber300,
+                focusedTextColor = DarkText,
+                unfocusedTextColor = DarkText,
+                focusedLabelColor = White,
+                unfocusedLabelColor = White
+            ),
+            label = { Text("Username") }
+        )
+
         Spacer(Modifier.height(48.dp))
 
         Button(
@@ -127,28 +154,64 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
                         if (task.isSuccessful) {
                             val user = auth.currentUser
                             val uuid = user?.uid ?: ""
-                            val request = User(email = email, uuid = uuid)
+                            val request = User(email = email, uuid = uuid, username = username)
 
-                            // Llamada a tu servidor Node
                             val call = RetrofitClient.api.registerUser(request)
                             call.enqueue(object : retrofit2.Callback<Void> {
-                                override fun onResponse(call: retrofit2.Call<Void>, response: retrofit2.Response<Void>) {
+                                override fun onResponse(
+                                    call: retrofit2.Call<Void>,
+                                    response: retrofit2.Response<Void>
+                                ) {
                                     if (response.isSuccessful) {
                                         Log.i("Retrofit", "Usuario registrado en PostgreSQL")
+                                        navigateToHome()
                                     } else {
-                                        Log.e("Retrofit", "Error al registrar en backend: ${response.code()}")
+                                        Log.e(
+                                            "Retrofit",
+                                            "Error al registrar en backend: ${response.code()}"
+                                        )
+
+                                        // ❗ Si falla en PostgreSQL, borramos el usuario de Firebase
+                                        user?.delete()
+                                            ?.addOnCompleteListener { deleteTask ->
+                                                if (deleteTask.isSuccessful) {
+                                                    Log.i(
+                                                        "Firebase",
+                                                        "Usuario eliminado por fallo en backend"
+                                                    )
+                                                } else {
+                                                    Log.e(
+                                                        "Firebase",
+                                                        "Error al eliminar usuario de Firebase"
+                                                    )
+                                                }
+                                            }
                                     }
                                 }
 
                                 override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
                                     Log.e("Retrofit", "Fallo al conectar con el backend", t)
+
+                                    // ❗ También eliminar en caso de fallo de red/backend
+                                    user?.delete()
+                                        ?.addOnCompleteListener { deleteTask ->
+                                            if (deleteTask.isSuccessful) {
+                                                Log.i(
+                                                    "Firebase",
+                                                    "Usuario eliminado por fallo de conexión"
+                                                )
+                                            } else {
+                                                Log.e(
+                                                    "Firebase",
+                                                    "Error al eliminar usuario de Firebase"
+                                                )
+                                            }
+                                        }
                                 }
                             })
 
-                            Log.i("Sign Up", "Registro correcto en Firebase")
-                            navigateToHome()
                         } else {
-                            Log.i("Sign Up", "Registro incorrecto")
+                            Log.i("Sign Up", "Registro incorrecto en Firebase: ${task.exception}")
                         }
                     }
             }

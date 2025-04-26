@@ -14,3 +14,5 @@ object SignUp
 @Serializable
 object Home
 
+@Serializable
+object Flights
