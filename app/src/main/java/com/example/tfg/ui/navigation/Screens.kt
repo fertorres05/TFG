@@ -16,3 +16,6 @@ object Home
 
 @Serializable
 object Flights
+
+@Serializable
+object AddFlight

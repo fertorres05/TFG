@@ -15,5 +15,6 @@ interface ApiService {
 
     //Para obtener informacion del usuario
     @GET("getUser/{uuid}")
-    fun getUser(@Path("uuid") uuid: String): Call<UserResponse>
+    suspend fun getUser(@Path("uuid") uuid: String): UserResponse
+
 }

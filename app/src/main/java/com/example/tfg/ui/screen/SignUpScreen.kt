@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tfg.R
@@ -35,11 +36,14 @@ import com.example.tfg.data.remote.RetrofitClient
 import com.example.tfg.data.remote.model.User
 import com.example.tfg.ui.theme.Amber300
 import com.example.tfg.ui.theme.DarkText
+import com.example.tfg.ui.theme.Pink80
 import com.example.tfg.ui.theme.Purple500
 import com.example.tfg.ui.theme.Purple700
 import com.example.tfg.ui.theme.SelectedField
 import com.example.tfg.ui.theme.White
 import com.google.firebase.auth.FirebaseAuth
+
+
 
 @Composable
 fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: () -> Unit) {
@@ -89,16 +93,16 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = White,
-                focusedContainerColor = SelectedField,
+                focusedContainerColor = White,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Amber300,
-                cursorColor = Amber300,
+                focusedIndicatorColor = Pink80,
+                cursorColor = Pink80,
                 focusedTextColor = DarkText,
                 unfocusedTextColor = DarkText,
                 focusedLabelColor = White,
-                unfocusedLabelColor = White
+                unfocusedLabelColor = White,
             ),
-            label = { Text("Email") }
+            placeholder = { Text("Email", color = Color.Gray) }
         )
 
 
@@ -109,18 +113,19 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
             value = password,
             onValueChange = { password = it },
             modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = White,
-                focusedContainerColor = SelectedField,
+                focusedContainerColor = White,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Amber300,
-                cursorColor = Amber300,
+                focusedIndicatorColor = Pink80,
+                cursorColor = Pink80,
                 focusedTextColor = DarkText,
                 unfocusedTextColor = DarkText,
                 focusedLabelColor = White,
-                unfocusedLabelColor = White
+                unfocusedLabelColor = White,
             ),
-            label = { Text("Password") }
+            placeholder = { Text("Password", color = Color.Gray) }
         )
 
         Spacer(Modifier.height(48.dp))
@@ -132,16 +137,16 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = White,
-                focusedContainerColor = SelectedField,
+                focusedContainerColor = White,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Amber300,
-                cursorColor = Amber300,
+                focusedIndicatorColor = Pink80,
+                cursorColor = Pink80,
                 focusedTextColor = DarkText,
                 unfocusedTextColor = DarkText,
                 focusedLabelColor = White,
-                unfocusedLabelColor = White
+                unfocusedLabelColor = White,
             ),
-            label = { Text("Username") }
+            placeholder = { Text("Username", color = Color.Gray) }
         )
 
         Spacer(Modifier.height(48.dp))
@@ -171,7 +176,7 @@ fun SignUpScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: (
                                             "Error al registrar en backend: ${response.code()}"
                                         )
 
-                                        // ❗ Si falla en PostgreSQL, borramos el usuario de Firebase
+                                        // Si falla en PostgreSQL, borramos el usuario de Firebase
                                         user?.delete()
                                             ?.addOnCompleteListener { deleteTask ->
                                                 if (deleteTask.isSuccessful) {

@@ -35,8 +35,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.example.tfg.ui.theme.Amber300
 import com.example.tfg.ui.theme.DarkText
+import com.example.tfg.ui.theme.Pink80
 import com.example.tfg.ui.theme.Purple500
 
 @Composable
@@ -84,14 +86,14 @@ fun LoginScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: ()
                 unfocusedContainerColor = White,
                 focusedContainerColor = White,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Amber300,
-                cursorColor = Amber300,
+                focusedIndicatorColor = Pink80,
+                cursorColor = Pink80,
                 focusedTextColor = DarkText,
                 unfocusedTextColor = DarkText,
                 focusedLabelColor = White,
                 unfocusedLabelColor = White
             ),
-            label = { Text("Email") }
+            placeholder = { Text("Email", color = Color.Gray) }
         )
 
 
@@ -102,18 +104,19 @@ fun LoginScreen(auth: FirebaseAuth, navigateToHome: () -> Unit, navigateBack: ()
             value = password,
             onValueChange = { password = it },
             modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = White,
-                focusedContainerColor = SelectedField,
+                focusedContainerColor = White,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Amber300,
-                cursorColor = Amber300,
+                focusedIndicatorColor = Pink80,
+                cursorColor = Pink80,
                 focusedTextColor = DarkText,
                 unfocusedTextColor = DarkText,
                 focusedLabelColor = White,
-                unfocusedLabelColor = White
+                unfocusedLabelColor = White,
             ),
-            label = { Text("Password") }
+            placeholder = { Text("Password", color = Color.Gray) }
         )
         Spacer(Modifier.height(48.dp))
 

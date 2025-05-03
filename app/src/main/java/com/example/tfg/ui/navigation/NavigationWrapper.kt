@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.tfg.ui.screen.AddFlightScreen
 import com.example.tfg.ui.screen.FlightsScreen
 import com.example.tfg.ui.screen.HomeScreen
 import com.example.tfg.ui.screen.InitialScreen
@@ -17,7 +18,7 @@ fun NavigationWrapper(auth: FirebaseAuth) {
     val currentUser = auth.currentUser // Obtener el usuario actual
 
     // Si el usuario está logueado, navega a Home, sino a Initial (Inicio)
-   // val startDestination = if (currentUser != null) Home else Initial
+    //val startDestination = if (currentUser != null) Home else Initial
     val startDestination = Initial
 
     NavHost(navController = navController, startDestination = startDestination) {
@@ -42,7 +43,12 @@ fun NavigationWrapper(auth: FirebaseAuth) {
         }
         composable<Home> {
             HomeScreen(
-                navigateBack = { navController.navigate(Initial){popUpTo(Initial){inclusive = true}} },
+                navigateBack = {
+                    auth.signOut() // Cerramos sesión en Firebase
+                    navController.navigate(Initial) {
+                        popUpTo(0) { inclusive = true } // Eliminamos TODO el stack
+                    }
+                },
                 navigateToHome = { navController.navigate(Home) },
                 navigateToFlights = { navController.navigate(Flights) }
             )
@@ -51,10 +57,18 @@ fun NavigationWrapper(auth: FirebaseAuth) {
             FlightsScreen(
                 navigateBack = { navController.navigate(Initial){popUpTo(Initial){inclusive = true}} },
                 navigateToHome = { navController.navigate(Home) },
-                navigateToFlights = { navController.navigate(Flights) }
-
+                navigateToFlights = { navController.navigate(Flights) },
+                navigatesToAddFlight = { navController.navigate(AddFlight) }
             )
         }
+        composable<AddFlight> {
+            AddFlightScreen(
+                navigateBack = { navController.navigate(Flights) },
+                navigateToHome = { navController.navigate(Home) },
+                navigateToFlights = { navController.navigate(Flights) }
+            )
+        }
+
     }
 }
 
