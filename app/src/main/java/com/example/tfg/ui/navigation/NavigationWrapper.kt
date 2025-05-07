@@ -18,8 +18,8 @@ fun NavigationWrapper(auth: FirebaseAuth) {
     val currentUser = auth.currentUser // Obtener el usuario actual
 
     // Si el usuario está logueado, navega a Home, sino a Initial (Inicio)
-    //val startDestination = if (currentUser != null) Home else Initial
-    val startDestination = Initial
+    val startDestination = if (currentUser != null) Home else Initial
+    //val startDestination = Initial
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable<Initial> {

@@ -2,27 +2,47 @@ package com.example.tfg.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tfg.ui.components.DatePickerDocked
+import com.example.tfg.data.remote.RetrofitClient
+import com.example.tfg.data.remote.model.FlightRequest
 import com.example.tfg.ui.components.MainScaffold
 import com.example.tfg.ui.theme.*
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-@Preview
-@Composable
-fun AddFlightScreenPreview() {
-    AddFlightScreen(
-        navigateBack = {},
-        navigateToHome = {},
-        navigateToFlights = {}
-    )
+val uuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+private fun addFlight(codeflight: String) {
+    println("Intentando añadir vuelo")
+    println("UUID: $uuid")
+    if (codeflight.isNotEmpty()) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val reservation= FlightRequest(codeflight, uuid)
+                val response = RetrofitClient.api.addFlight(reservation)
+                if (response.isSuccessful) {
+                    val responseString = response.body()?.string()
+                    println("Respuesta del servidor: $responseString")
+                } else {
+                    println("Error en la respuesta: ${response.code()} - ${response.errorBody()?.string()}")
+                }
+
+            } catch (e: Exception) {
+                println("Error: ${e.localizedMessage}")
+            }
+        }
+    } else {
+        println("El código de vuelo está vacío.")
+    }
 }
 
 
@@ -35,13 +55,17 @@ fun AddFlightScreen(
 ) {
     var codeflight by remember { mutableStateOf("") }
 
+
     MainScaffold(
         navigateToHome = navigateToHome,
         navigateToFlights = navigateToFlights,
         floatingActionButton = {
+            val scope = rememberCoroutineScope() // ← Aquí
             FloatingActionButton(
                 onClick = {
-                    println("FAB clicked!")
+                    scope.launch {
+                        addFlight(codeflight)
+                    }
                 }
             ) {
                 Icon(Icons.Filled.Check, contentDescription = "Add")
@@ -67,29 +91,23 @@ fun AddFlightScreen(
                 onValueChange = { codeflight = it },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = UnselectedField,
-                    focusedContainerColor = SelectedField,
-                    unfocusedIndicatorColor = Black,
-                    focusedIndicatorColor = Amber300,
-                    cursorColor = Amber300,
+                    unfocusedContainerColor = White,
+                    focusedContainerColor = White,
+                    unfocusedIndicatorColor =  Pink80,
+                    focusedIndicatorColor = Pink80,
+                    cursorColor = Pink80,
                     focusedTextColor = DarkText,
                     unfocusedTextColor = DarkText,
                     focusedLabelColor = White,
-                    unfocusedLabelColor = White,
+                    unfocusedLabelColor = Color.Gray
                 ),
                 label = { Text("Code Flight") }
             )
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            Text(
-                text = "Departure date:",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            )
-
-            DatePickerDocked()
 
         }
     }
 }
+
