@@ -4,11 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tfg.ui.screen.AddFlightScreen
-import com.example.tfg.ui.screen.FlightsScreen
+import com.example.tfg.ui.screen.AddReservationScreen
+import com.example.tfg.ui.screen.FlightScreen
 import com.example.tfg.ui.screen.HomeScreen
 import com.example.tfg.ui.screen.InitialScreen
 import com.example.tfg.ui.screen.LoginScreen
+import com.example.tfg.ui.screen.ReservationsScreen
 import com.example.tfg.ui.screen.SignUpScreen
 import com.google.firebase.auth.FirebaseAuth
 
@@ -32,39 +33,62 @@ fun NavigationWrapper(auth: FirebaseAuth) {
             LoginScreen(
                 auth = auth,
                 navigateToHome = { navController.navigate(Home) },
-                navigateBack = { navController.navigate(Initial){popUpTo(Initial){inclusive = true}} }
+                navigateBack = {
+                    navController.navigate(Initial) {
+                        popUpTo(Initial) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
         composable<SignUp> {
             SignUpScreen(
                 auth = auth, navigateToHome = { navController.navigate(Home) },
-                navigateBack = { navController.navigate(Initial){popUpTo(Initial){inclusive = true}} }
+                navigateBack = {
+                    navController.navigate(Initial) {
+                        popUpTo(Initial) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
         composable<Home> {
             HomeScreen(
-                navigateBack = {
-                    auth.signOut() // Cerramos sesión en Firebase
-                    navController.navigate(Initial) {
-                        popUpTo(0) { inclusive = true } // Eliminamos TODO el stack
-                    }
-                },
+                auth = auth,
+                navController = navController,
                 navigateToHome = { navController.navigate(Home) },
+                navigateToReservation = { navController.navigate(Reservations) },
                 navigateToFlights = { navController.navigate(Flights) }
             )
         }
-        composable<Flights> {
-            FlightsScreen(
-                navigateBack = { navController.navigate(Initial){popUpTo(Initial){inclusive = true}} },
+        composable<Reservations> {
+            ReservationsScreen(
+                auth = auth,
+                navController = navController,
                 navigateToHome = { navController.navigate(Home) },
                 navigateToFlights = { navController.navigate(Flights) },
-                navigatesToAddFlight = { navController.navigate(AddFlight) }
+                navigateToReservation = { navController.navigate(Reservations) },
+                navigatesToAddReservation = { navController.navigate(AddReservation) }
             )
         }
-        composable<AddFlight> {
-            AddFlightScreen(
-                navigateBack = { navController.navigate(Flights) },
+        composable<AddReservation> {
+            AddReservationScreen(
+                auth = auth,
+                navController = navController,
                 navigateToHome = { navController.navigate(Home) },
+                navigateToReservation = { navController.navigate(Reservations) },
+                navigateToFlights = { navController.navigate(Flights) }
+            )
+        }
+
+        composable<Flights> {
+            FlightScreen(
+                auth = auth,
+                navController = navController,
+                navigateToHome = { navController.navigate(Home) },
+                navigateToReservation = { navController.navigate(Reservations) },
                 navigateToFlights = { navController.navigate(Flights) }
             )
         }

@@ -5,11 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,19 +14,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.tfg.ui.components.FlightCard
 import com.example.tfg.ui.components.MainScaffold
-import com.example.tfg.ui.components.ReservationCard
 import com.google.firebase.auth.FirebaseAuth
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReservationsScreen(
+fun FlightScreen(
     auth: FirebaseAuth,
     navController: NavHostController,
     navigateToHome: () -> Unit,
-    navigateToFlights: () -> Unit,
     navigateToReservation: () -> Unit,
-    navigatesToAddReservation: () -> Unit
+    navigateToFlights: () -> Unit
 ) {
     MainScaffold(
         navigateToHome = navigateToHome,
@@ -38,16 +34,6 @@ fun ReservationsScreen(
         navigateToReservations = navigateToReservation,
         auth = auth,
         navController = navController,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navigatesToAddReservation()
-                    println("FAB clicked!")
-                }
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
-            }
-        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -58,13 +44,12 @@ fun ReservationsScreen(
             Spacer(modifier = Modifier.height(15.dp))
 
             Text(
-                text = "RESERVATIONS",
+                text = "Flights",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
 
-            ReservationCard()
-
+            FlightCard()
         }
     }
 }

@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 val uuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-private fun addFlight(codeflight: String, persons1: String, cost1: String) {
+private fun addReservation(codeflight: String, persons1: String, cost1: String) {
     println("Intentando añadir vuelo")
     println("UUID: $uuid")
     if (codeflight.isNotEmpty()) {
@@ -49,11 +49,12 @@ private fun addFlight(codeflight: String, persons1: String, cost1: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddFlightScreen(
+fun AddReservationScreen(
     auth: FirebaseAuth,
     navController: NavHostController,
     navigateToHome: () -> Unit,
-    navigateToFlights: () -> Unit
+    navigateToFlights: () -> Unit,
+    navigateToReservation: () -> Unit
 ) {
     var codeflight by remember { mutableStateOf("") }
     var persons by remember { mutableStateOf("") }
@@ -63,6 +64,7 @@ fun AddFlightScreen(
     MainScaffold(
         navigateToHome = navigateToHome,
         navigateToFlights = navigateToFlights,
+        navigateToReservations = navigateToReservation,
         auth = auth,
         navController = navController,
         floatingActionButton = {
@@ -70,7 +72,7 @@ fun AddFlightScreen(
             FloatingActionButton(
                 onClick = {
                     scope.launch {
-                        addFlight(codeflight, persons, cost)
+                        addReservation(codeflight, persons, cost)
                     }
                 }
             ) {

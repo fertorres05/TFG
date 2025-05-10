@@ -15,7 +15,11 @@ object SignUp
 object Home
 
 @Serializable
-object Flights
+object Reservations
 
 @Serializable
-object AddFlight
+object AddReservation
+
+@Serializable
+object Flights
+

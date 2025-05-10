@@ -27,22 +27,19 @@ import com.example.tfg.R
 import com.example.tfg.ui.theme.Purple500
 import com.example.tfg.ui.theme.White
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.example.tfg.ui.navigation.Initial
 import com.example.tfg.viewmodel.UserViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 
-@Preview
-@Composable
-fun MainScaffoldPreview () {
-    MainScaffold(
-        navigateToHome ={},
-        navigateToFlights = { },
-        content = {},
-    )
-}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScaffold(
+    auth: FirebaseAuth,
+    navController: NavHostController,
     navigateToHome: () -> Unit,
+    navigateToReservations: () -> Unit,
     navigateToFlights: () -> Unit,
     floatingActionButton: @Composable (() -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit
@@ -92,17 +89,34 @@ fun MainScaffold(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    IconButton(onClick = {navigateToHome()}) {
-                        Icon(painterResource(id = R.drawable.home), contentDescription = "Home Screen")
+                    IconButton(onClick = { navigateToHome() }) {
+                        Icon(
+                            painterResource(id = R.drawable.home),
+                            contentDescription = "Home Screen"
+                        )
+                    }
+                    IconButton(onClick = { navigateToReservations() }) {
+                        Icon(
+                            painterResource(id = R.drawable.plane),
+                            contentDescription = "Flights Screen"
+                        )
                     }
                     IconButton(onClick = { navigateToFlights() }) {
-                        Icon(painterResource(id = R.drawable.plane), contentDescription = "Flights Screen")
+                        Icon(
+                            painterResource(id = R.drawable.money),
+                            contentDescription = "Money Screen"
+                        )
                     }
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(painterResource(id = R.drawable.money), contentDescription = "Money Screen")
-                    }
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(painterResource(id = R.drawable.user), contentDescription = "User Screen")
+                    IconButton(onClick = {
+                        auth.signOut()
+                        navController.navigate(Initial) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }) {
+                        Icon(
+                            painterResource(id = R.drawable.user),
+                            contentDescription = "User Screen"
+                        )
                     }
                 }
             }
