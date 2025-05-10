@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.tfg.data.remote.RetrofitClient
 import com.example.tfg.data.remote.model.FlightRequest
 import com.example.tfg.ui.components.MainScaffold
@@ -21,13 +22,13 @@ import kotlinx.coroutines.launch
 
 val uuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-private fun addFlight(codeflight: String) {
+private fun addFlight(codeflight: String, persons1: String, cost1: String) {
     println("Intentando añadir vuelo")
     println("UUID: $uuid")
     if (codeflight.isNotEmpty()) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val reservation= FlightRequest(codeflight, uuid)
+                val reservation= FlightRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble())
                 val response = RetrofitClient.api.addFlight(reservation)
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
@@ -49,28 +50,34 @@ private fun addFlight(codeflight: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddFlightScreen(
-    navigateBack: () -> Unit,
+    auth: FirebaseAuth,
+    navController: NavHostController,
     navigateToHome: () -> Unit,
     navigateToFlights: () -> Unit
 ) {
     var codeflight by remember { mutableStateOf("") }
+    var persons by remember { mutableStateOf("") }
+    var cost by remember { mutableStateOf("") }
 
 
     MainScaffold(
         navigateToHome = navigateToHome,
         navigateToFlights = navigateToFlights,
+        auth = auth,
+        navController = navController,
         floatingActionButton = {
             val scope = rememberCoroutineScope() // ← Aquí
             FloatingActionButton(
                 onClick = {
                     scope.launch {
-                        addFlight(codeflight)
+                        addFlight(codeflight, persons, cost)
                     }
                 }
             ) {
                 Icon(Icons.Filled.Check, contentDescription = "Add")
             }
         }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -104,7 +111,59 @@ fun AddFlightScreen(
                 label = { Text("Code Flight") }
             )
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Text(
+                text = "Persons:",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+
+            TextField(
+                value = persons,
+                onValueChange = { persons = it },
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = White,
+                    focusedContainerColor = White,
+                    unfocusedIndicatorColor =  Pink80,
+                    focusedIndicatorColor = Pink80,
+                    cursorColor = Pink80,
+                    focusedTextColor = DarkText,
+                    unfocusedTextColor = DarkText,
+                    focusedLabelColor = White,
+                    unfocusedLabelColor = Color.Gray
+                ),
+                label = { Text("Persons") }
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Text(
+                text = "Cost €:",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+
+            TextField(
+                value = cost,
+                onValueChange = { cost = it },
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = White,
+                    focusedContainerColor = White,
+                    unfocusedIndicatorColor =  Pink80,
+                    focusedIndicatorColor = Pink80,
+                    cursorColor = Pink80,
+                    focusedTextColor = DarkText,
+                    unfocusedTextColor = DarkText,
+                    focusedLabelColor = White,
+                    unfocusedLabelColor = Color.Gray
+                ),
+                label = { Text("Code Flight") }
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
 
 
         }
