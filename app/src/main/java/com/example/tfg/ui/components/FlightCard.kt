@@ -19,62 +19,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tfg.data.remote.model.FlightCard
 
-@Preview(showBackground = true)
 @Composable
-fun FlightCard() {
+fun FlightCard(flight: FlightCard) {
     Row(
         modifier = Modifier
             .padding(16.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFFD084E7)) // Color de fondo similar
+            .background(Color(0xFFD084E7))
             .fillMaxWidth()
             .height(80.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Sección: Aerolínea y Código de vuelo
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
+            modifier = Modifier.weight(1f).fillMaxHeight(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("RYR", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Text("FR224", color = Color.White, fontWeight = FontWeight.Bold)
+            Text(flight.airline_name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(flight.code_flight, color = Color.White, fontWeight = FontWeight.Bold)
         }
 
         VerticalDivider()
 
-        // Sección: Ruta
         Row(
-            modifier = Modifier
-                .weight(2f)
-                .fillMaxHeight(),
+            modifier = Modifier.weight(2f).fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text("IBZ", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(flight.departure_airport, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Spacer(modifier = Modifier.width(8.dp))
             Text("→", color = Color.White, fontSize = 20.sp)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("VLC", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(flight.arrival_airport, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
 
         VerticalDivider()
 
-        // Sección: Fecha
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
+            modifier = Modifier.weight(1f).fillMaxHeight(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("9/05/2025", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(flight.departure_date, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
     }
 }

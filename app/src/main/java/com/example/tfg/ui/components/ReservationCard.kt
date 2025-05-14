@@ -25,7 +25,6 @@ fun ReservationCard() {
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .clip(RoundedCornerShape(16.dp))
             .background(Color(0xFFD084E7)) // Color superior
     ) {
         // Parte superior: Origen - Destino

@@ -1,7 +1,9 @@
 package com.example.tfg.data.remote.api
-import com.example.tfg.data.remote.model.FlightRequest
+import com.example.tfg.data.remote.model.FlightCard
+import com.example.tfg.data.remote.model.ReservationRequest
 import com.example.tfg.data.remote.model.User
 import com.example.tfg.data.remote.model.UserResponse
+import com.example.tfg.data.remote.model.UserStats
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -20,6 +22,14 @@ interface ApiService {
     @GET("getUser/{uuid}")
     suspend fun getUser(@Path("uuid") uuid: String): UserResponse
 
+    //Para registrar las reservas de los usuarios
     @POST("/reservation")
-    suspend fun addFlight(@Body flight: FlightRequest): Response <ResponseBody>
+    suspend fun addReservation(@Body flight: ReservationRequest): Response <ResponseBody>
+
+    @GET("user/{uuid}/flights/")
+    suspend fun getUserFlights(@Path("uuid") uuid: String): List<FlightCard>
+
+    @GET("user/{uuid}/stats/")
+    suspend fun getUserStats(@Path("uuid") uuid: String): UserStats
+
 }

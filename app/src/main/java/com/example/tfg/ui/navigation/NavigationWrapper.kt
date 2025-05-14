@@ -1,6 +1,7 @@
 package com.example.tfg.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,12 +12,14 @@ import com.example.tfg.ui.screen.InitialScreen
 import com.example.tfg.ui.screen.LoginScreen
 import com.example.tfg.ui.screen.ReservationsScreen
 import com.example.tfg.ui.screen.SignUpScreen
+import com.example.tfg.viewmodel.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun NavigationWrapper(auth: FirebaseAuth) {
     val navController = rememberNavController()
     val currentUser = auth.currentUser // Obtener el usuario actual
+    val homeViewModel: HomeViewModel = viewModel()
 
     // Si el usuario está logueado, navega a Home, sino a Initial (Inicio)
     val startDestination = if (currentUser != null) Home else Initial
@@ -60,7 +63,8 @@ fun NavigationWrapper(auth: FirebaseAuth) {
                 navController = navController,
                 navigateToHome = { navController.navigate(Home) },
                 navigateToReservation = { navController.navigate(Reservations) },
-                navigateToFlights = { navController.navigate(Flights) }
+                navigateToFlights = { navController.navigate(Flights) },
+                homeViewModel = homeViewModel
             )
         }
         composable<Reservations> {

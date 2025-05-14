@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tfg.data.remote.RetrofitClient
-import com.example.tfg.data.remote.model.FlightRequest
+import com.example.tfg.data.remote.model.ReservationRequest
 import com.example.tfg.ui.components.MainScaffold
 import com.example.tfg.ui.theme.*
 import com.google.firebase.auth.FirebaseAuth
@@ -28,8 +28,8 @@ private fun addReservation(codeflight: String, persons1: String, cost1: String) 
     if (codeflight.isNotEmpty()) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val reservation= FlightRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble())
-                val response = RetrofitClient.api.addFlight(reservation)
+                val reservation= ReservationRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble())
+                val response = RetrofitClient.api.addReservation(reservation)
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
                     println("Respuesta del servidor: $responseString")
