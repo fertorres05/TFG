@@ -1,6 +1,7 @@
 package com.example.tfg.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,14 +25,15 @@ import androidx.compose.ui.unit.sp
 import com.example.tfg.data.remote.model.FlightCard
 
 @Composable
-fun FlightCard(flight: FlightCard) {
+fun FlightCard(flight: FlightCard, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .padding(16.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color(0xFFD084E7))
             .fillMaxWidth()
-            .height(80.dp),
+            .height(80.dp)
+            .clickable { onClick() } ,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
@@ -39,7 +41,7 @@ fun FlightCard(flight: FlightCard) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(flight.airline_name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(flight.airline_code_iata, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Text(flight.code_flight, color = Color.White, fontWeight = FontWeight.Bold)
         }
 

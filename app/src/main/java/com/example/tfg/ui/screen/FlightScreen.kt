@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tfg.ui.navigation.FlightDetail
 
 
 @Composable
@@ -30,17 +31,17 @@ fun FlightScreen(
     navController: NavHostController,
     navigateToHome: () -> Unit,
     navigateToReservation: () -> Unit,
-    navigateToFlights: () -> Unit
+    navigateToFlights: () -> Unit,
+    viewModel: FlightViewModel
 ) {
-    val flightViewModel: FlightViewModel = viewModel()
-    val flights = flightViewModel.flights.value
+    val flights = viewModel.flights.value
 
     val userId = auth.currentUser?.uid
 
     LaunchedEffect(userId) {
         userId?.let {
             println("Cargando vuelos para el usuario con ID: $it")
-            flightViewModel.loadFlights(it)
+            viewModel.loadFlights(it)
         }
     }
 
@@ -73,7 +74,11 @@ fun FlightScreen(
                     .fillMaxHeight()
             ) {
                 items(flights) { flight ->
-                    FlightCard(flight)
+                    FlightCard(flight = flight, onClick = {
+                        viewModel.selectFlight(flight)
+                        navController.navigate(FlightDetail)
+                    })
+
                 }
             }
             Text(

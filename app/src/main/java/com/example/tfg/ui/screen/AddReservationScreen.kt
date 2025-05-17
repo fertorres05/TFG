@@ -5,9 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -19,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.tfg.ui.components.BaggageOptionList
+
 
 val uuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
@@ -28,13 +32,18 @@ private fun addReservation(codeflight: String, persons1: String, cost1: String) 
     if (codeflight.isNotEmpty()) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val reservation= ReservationRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble())
+                val reservation =
+                    ReservationRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble())
                 val response = RetrofitClient.api.addReservation(reservation)
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
                     println("Respuesta del servidor: $responseString")
                 } else {
-                    println("Error en la respuesta: ${response.code()} - ${response.errorBody()?.string()}")
+                    println(
+                        "Error en la respuesta: ${response.code()} - ${
+                            response.errorBody()?.string()
+                        }"
+                    )
                 }
 
             } catch (e: Exception) {
@@ -102,7 +111,7 @@ fun AddReservationScreen(
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = White,
                     focusedContainerColor = White,
-                    unfocusedIndicatorColor =  Pink80,
+                    unfocusedIndicatorColor = Pink80,
                     focusedIndicatorColor = Pink80,
                     cursorColor = Pink80,
                     focusedTextColor = DarkText,
@@ -115,57 +124,95 @@ fun AddReservationScreen(
 
             Spacer(modifier = Modifier.height(15.dp))
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                // Primer campo
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "Persons:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+
+                    TextField(
+                        value = persons,
+                        onValueChange = { persons = it },
+                        modifier = Modifier.width(120.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = White,
+                            focusedContainerColor = White,
+                            unfocusedIndicatorColor = Pink80,
+                            focusedIndicatorColor = Pink80,
+                            cursorColor = Pink80,
+                            focusedTextColor = DarkText,
+                            unfocusedTextColor = DarkText,
+                            focusedLabelColor = Pink80,
+                            unfocusedLabelColor = Color.Gray
+                        ),
+                        label = { Text("Number") },
+                        singleLine = true
+                    )
+                }
+
+                // Segundo campo
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "Cost €:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+
+                    TextField(
+                        value = cost,
+                        onValueChange = { cost = it },
+                        modifier = Modifier.width(120.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = White,
+                            focusedContainerColor = White,
+                            unfocusedIndicatorColor = Pink80,
+                            focusedIndicatorColor = Pink80,
+                            cursorColor = Pink80,
+                            focusedTextColor = DarkText,
+                            unfocusedTextColor = DarkText,
+                            focusedLabelColor = Pink80,
+                            unfocusedLabelColor = Color.Gray
+                        ),
+                        label = { Text("Total Cost") },
+                        singleLine = true
+                    )
+                }
+            }
+
             Text(
-                text = "Persons:",
+                text = "Luggage:",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
 
-            TextField(
-                value = persons,
-                onValueChange = { persons = it },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = White,
-                    focusedContainerColor = White,
-                    unfocusedIndicatorColor =  Pink80,
-                    focusedIndicatorColor = Pink80,
-                    cursorColor = Pink80,
-                    focusedTextColor = DarkText,
-                    unfocusedTextColor = DarkText,
-                    focusedLabelColor = White,
-                    unfocusedLabelColor = Color.Gray
-                ),
-                label = { Text("Persons") }
-            )
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(15.dp))
+            BaggageOptionList()
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Cost €:",
+                text = "ADD FLIGHT+",
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = Purple500,
+                style = LocalTextStyle.current.copy(
+                    textDecoration = TextDecoration.Underline
+                )
             )
-
-            TextField(
-                value = cost,
-                onValueChange = { cost = it },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = White,
-                    focusedContainerColor = White,
-                    unfocusedIndicatorColor =  Pink80,
-                    focusedIndicatorColor = Pink80,
-                    cursorColor = Pink80,
-                    focusedTextColor = DarkText,
-                    unfocusedTextColor = DarkText,
-                    focusedLabelColor = White,
-                    unfocusedLabelColor = Color.Gray
-                ),
-                label = { Text("Code Flight") }
-            )
-
-            Spacer(modifier = Modifier.height(15.dp))
 
 
         }

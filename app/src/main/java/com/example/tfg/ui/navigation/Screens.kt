@@ -23,3 +23,7 @@ object AddReservation
 @Serializable
 object Flights
 
+@Serializable
+object FlightDetail
+
+

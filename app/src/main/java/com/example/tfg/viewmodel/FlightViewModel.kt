@@ -10,9 +10,14 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.State
 
 
+// FlightViewModel.kt
 class FlightViewModel : ViewModel() {
     private val _flights = mutableStateOf<List<FlightCard>>(emptyList())
     val flights: State<List<FlightCard>> = _flights
+
+    // Nuevo estado para el vuelo seleccionado
+    var selectedFlight = mutableStateOf<FlightCard?>(null)
+        private set
 
     fun loadFlights(uuid: String) {
         viewModelScope.launch {
@@ -24,4 +29,10 @@ class FlightViewModel : ViewModel() {
             }
         }
     }
+
+    // Método para seleccionar un vuelo
+    fun selectFlight(flight: FlightCard) {
+        selectedFlight.value = flight
+    }
 }
+
