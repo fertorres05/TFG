@@ -26,14 +26,14 @@ import com.example.tfg.ui.components.BaggageOptionList
 
 val uuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-private fun addReservation(codeflight: String, persons1: String, cost1: String) {
+private fun addReservation(codeflight: String, persons1: String, cost1: String, luggage: Map<String, Int>) {
     println("Intentando añadir vuelo")
     println("UUID: $uuid")
     if (codeflight.isNotEmpty()) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val reservation =
-                    ReservationRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble())
+                    ReservationRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble(),luggage)
                 val response = RetrofitClient.api.addReservation(reservation)
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
@@ -68,6 +68,7 @@ fun AddReservationScreen(
     var codeflight by remember { mutableStateOf("") }
     var persons by remember { mutableStateOf("") }
     var cost by remember { mutableStateOf("") }
+    var selectedBaggage by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
 
 
     MainScaffold(
@@ -81,7 +82,7 @@ fun AddReservationScreen(
             FloatingActionButton(
                 onClick = {
                     scope.launch {
-                        addReservation(codeflight, persons, cost)
+                        addReservation(codeflight, persons, cost, selectedBaggage)
                     }
                 }
             ) {
@@ -192,15 +193,19 @@ fun AddReservationScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
             Text(
                 text = "Luggage:",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            BaggageOptionList()
+
+            BaggageOptionList { updatedMap -> selectedBaggage = updatedMap }
+
 
             Spacer(modifier = Modifier.height(20.dp))
 

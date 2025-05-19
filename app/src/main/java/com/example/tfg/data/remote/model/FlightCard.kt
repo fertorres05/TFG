@@ -11,5 +11,6 @@ data class FlightCard(
     val arrival_airport: String,
     val arrival_airport_name: String,
     val cost: Double,
-    val persons: Int
+    val persons: Int,
+    val luggage: List<LuggageItem>
 )

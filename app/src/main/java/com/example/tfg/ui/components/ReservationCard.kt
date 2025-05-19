@@ -1,6 +1,7 @@
 package com.example.tfg.ui.components
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,17 +18,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Column
-
+import androidx.compose.ui.res.painterResource
+import com.example.tfg.R
 
 @Preview(showBackground = true)
 @Composable
-fun ReservationCard() {
+fun ReservationListScreen() {
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        ReservationCard(
+            reservationName = "Hollydais trip",
+            flightsCount = 2,
+            totalCost = 300.0
+        )
+    }
+}
+
+@Composable
+fun ReservationCard(
+    reservationName: String,
+    flightsCount: Int,
+    totalCost: Double,
+) {
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .background(Color(0xFFD084E7)) // Color superior
+            .background(Color(0xFFA231B5)) // Color superior
     ) {
-        // Parte superior: Origen - Destino
+
+        //Nombre de la reserva
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -36,28 +54,15 @@ fun ReservationCard() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("IBZ", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                Text("Ibiza", color = Color.White)
+                Text(reservationName, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
             }
 
-//            Icon(
-//                imageVector = Icons.Filled.Flight,
-//                contentDescription = "Airplane",
-//                tint = Color.White,
-//                modifier = Modifier.size(32.dp)
-//            )
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("ZGZ", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                Text("Zaragoza", color = Color.White)
-            }
         }
 
-        // Parte inferior: Fechas y código
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFA231B5)) // Color inferior
+                .background(Color(0xFFD084E7 )) // Color inferior
                 .padding(16.dp)
         ) {
             Row(
@@ -65,30 +70,43 @@ fun ReservationCard() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    //Icon(Icons.Filled.Flight, contentDescription = null, tint = Color.White)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Wen, 28 May", color = Color.White)
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text("20:30", color = Color.White)
+
+                    // Info de vuelos
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.airplane),
+                            contentDescription = "Logo",
+                            modifier = Modifier.size(30.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Flights: $flightsCount",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+
+                        )
+                    }
+
+                    // Info de coste
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                        Image(
+                            painter = painterResource(id = R.drawable.cost),
+                            contentDescription = "Cost icon",
+                            modifier = Modifier.size(30.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Cost: ${"%.2f".format(totalCost)}€",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    //Icon(Icons.Filled.Flight, contentDescription = null, tint = Color.White)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Thur, 30 May", color = Color.White)
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text("19:30", color = Color.White)
-                }
-
-                Text("FR108KB", fontWeight = FontWeight.Bold, color = Color.White)
-            }
         }
     }
 }

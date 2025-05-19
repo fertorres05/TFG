@@ -62,8 +62,29 @@ fun ReservationsScreen(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
+            Spacer(modifier = Modifier.height(10.dp))
 
-            ReservationCard()
+            ReservationCard(
+                reservationName = "Summer holidays",
+                flightsCount = 2,
+                totalCost = 300.0
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            ReservationCard(
+                reservationName = "Christmas holidays",
+                flightsCount = 4,
+                totalCost = 800.0
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+
+            ReservationCard(
+                reservationName = "Easter holidays",
+                flightsCount = 2,
+                totalCost = 500.0
+            )
+
 
         }
     }

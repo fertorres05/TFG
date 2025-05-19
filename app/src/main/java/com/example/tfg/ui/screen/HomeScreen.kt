@@ -85,7 +85,11 @@ fun HomeScreen(
                 )
             }
 
-            ReservationCard()
+            ReservationCard(
+                reservationName = "Summer holidays",
+                flightsCount = 2,
+                totalCost = 300.0
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -115,7 +119,7 @@ fun HomeScreen(
                 Square(
 
                     title = "MOST DESTINATION: ",
-                    content = "Airport: \n ${stats?.most_visited_destination ?: "-" } \n Times: \n ${stats?.destination_flight_count ?: "-"}",
+                    content = "Airport: \n ${stats?.most_visited_destination ?: "-"} \n Times: \n ${stats?.destination_flight_count ?: "-"}",
 
                     )
             }
