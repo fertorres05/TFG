@@ -14,31 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.painterResource
 import com.example.tfg.R
+import com.example.tfg.data.remote.model.ReservationCard
 
-@Preview(showBackground = true)
-@Composable
-fun ReservationListScreen() {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        ReservationCard(
-            reservationName = "Hollydais trip",
-            flightsCount = 2,
-            totalCost = 300.0
-        )
-    }
-}
 
 @Composable
-fun ReservationCard(
-    reservationName: String,
-    flightsCount: Int,
-    totalCost: Double,
-) {
+fun ReservationCard(reservation: ReservationCard) {
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -54,7 +39,7 @@ fun ReservationCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(reservationName, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                Text(reservation.reservation_name, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
             }
 
         }
@@ -80,7 +65,7 @@ fun ReservationCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Flights: $flightsCount",
+                            text = "Flights: "+ reservation.flight_count,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
@@ -98,7 +83,7 @@ fun ReservationCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Cost: ${"%.2f".format(totalCost)}€",
+                            text = "Cost: "+reservation.total_cost +"€",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White

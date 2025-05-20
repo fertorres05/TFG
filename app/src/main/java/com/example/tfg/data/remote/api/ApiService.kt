@@ -1,5 +1,6 @@
 package com.example.tfg.data.remote.api
 import com.example.tfg.data.remote.model.FlightCard
+import com.example.tfg.data.remote.model.ReservationCard
 import com.example.tfg.data.remote.model.ReservationRequest
 import com.example.tfg.data.remote.model.User
 import com.example.tfg.data.remote.model.UserResponse
@@ -25,6 +26,10 @@ interface ApiService {
     //Para registrar las reservas de los usuarios
     @POST("/reservation")
     suspend fun addReservation(@Body flight: ReservationRequest): Response <ResponseBody>
+
+    //Para obtener las reservas de los usuarios
+    @GET("user/{uuid}/reservations-summary")
+    suspend fun getUserReservations(@Path("uuid") uuid: String): List<ReservationCard>
 
     @GET("user/{uuid}/flights/")
     suspend fun getUserFlights(@Path("uuid") uuid: String): List<FlightCard>

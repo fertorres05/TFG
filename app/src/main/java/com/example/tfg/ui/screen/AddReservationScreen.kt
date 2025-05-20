@@ -26,14 +26,14 @@ import com.example.tfg.ui.components.BaggageOptionList
 
 val uuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-private fun addReservation(codeflight: String, persons1: String, cost1: String, luggage: Map<String, Int>) {
+private fun addReservation(codeflight: String, persons1: String, cost1: String, luggage: Map<String, Int>, name: String) {
     println("Intentando añadir vuelo")
     println("UUID: $uuid")
     if (codeflight.isNotEmpty()) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val reservation =
-                    ReservationRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble(),luggage)
+                    ReservationRequest(codeflight, uuid, persons1.toInt(), cost1.toDouble(),luggage, name)
                 val response = RetrofitClient.api.addReservation(reservation)
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
@@ -65,6 +65,7 @@ fun AddReservationScreen(
     navigateToFlights: () -> Unit,
     navigateToReservation: () -> Unit
 ) {
+    var reservationName by remember { mutableStateOf("") }
     var codeflight by remember { mutableStateOf("") }
     var persons by remember { mutableStateOf("") }
     var cost by remember { mutableStateOf("") }
@@ -82,7 +83,7 @@ fun AddReservationScreen(
             FloatingActionButton(
                 onClick = {
                     scope.launch {
-                        addReservation(codeflight, persons, cost, selectedBaggage)
+                        addReservation(codeflight, persons, cost, selectedBaggage, reservationName)
                     }
                 }
             ) {
@@ -97,6 +98,32 @@ fun AddReservationScreen(
                 .padding(horizontal = 16.dp)
                 .fillMaxSize()
         ) {
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Text(
+                text = "Reservation Name:",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+
+            TextField(
+                value = reservationName,
+                onValueChange = { reservationName = it },
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = White,
+                    focusedContainerColor = White,
+                    unfocusedIndicatorColor = Pink80,
+                    focusedIndicatorColor = Pink80,
+                    cursorColor = Pink80,
+                    focusedTextColor = DarkText,
+                    unfocusedTextColor = DarkText,
+                    focusedLabelColor = White,
+                    unfocusedLabelColor = Color.Gray
+                ),
+                label = { Text("Reservation Name") }
+            )
+
             Spacer(modifier = Modifier.height(15.dp))
 
             Text(

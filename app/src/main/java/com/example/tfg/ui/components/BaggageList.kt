@@ -55,7 +55,7 @@ fun BaggageItem(
             .fillMaxWidth()
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
             .border(1.dp, lineColor, RoundedCornerShape(8.dp))
-            .padding(12.dp),
+            .padding(5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

@@ -85,11 +85,11 @@ fun HomeScreen(
                 )
             }
 
-            ReservationCard(
-                reservationName = "Summer holidays",
-                flightsCount = 2,
-                totalCost = 300.0
-            )
+//            ReservationCard(
+//                reservationName = "Summer holidays",
+//                flightsCount = 2,
+//                totalCost = 300.0
+//            )
 
             Spacer(modifier = Modifier.height(20.dp))
 

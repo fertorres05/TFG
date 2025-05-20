@@ -15,6 +15,7 @@ import com.example.tfg.ui.screen.ReservationsScreen
 import com.example.tfg.ui.screen.SignUpScreen
 import com.example.tfg.viewmodel.FlightViewModel
 import com.example.tfg.viewmodel.HomeViewModel
+import com.example.tfg.viewmodel.ReservationViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -23,6 +24,7 @@ fun NavigationWrapper(auth: FirebaseAuth) {
     val currentUser = auth.currentUser // Obtener el usuario actual
     val homeViewModel: HomeViewModel = viewModel()
     val flightViewModel: FlightViewModel = viewModel()
+    val reservationsViewModel: ReservationViewModel = viewModel()
 
 
     // Si el usuario está logueado, navega a Home, sino a Initial (Inicio)
@@ -78,7 +80,8 @@ fun NavigationWrapper(auth: FirebaseAuth) {
                 navigateToHome = { navController.navigate(Home) },
                 navigateToFlights = { navController.navigate(Flights) },
                 navigateToReservation = { navController.navigate(Reservations) },
-                navigatesToAddReservation = { navController.navigate(AddReservation) }
+                navigatesToAddReservation = { navController.navigate(AddReservation) },
+                viewModel = reservationsViewModel
             )
         }
         composable<AddReservation> {

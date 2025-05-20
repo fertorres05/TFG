@@ -5,5 +5,6 @@ data class ReservationRequest(
     val uuid_user: String,
     val persons: Int? = null,
     val cost: Double? = null,
-    val luggage: Map<String, Int>
+    val luggage: Map<String, Int>,
+    val reservation_name: String
 )
