@@ -1,5 +1,7 @@
 package com.example.tfg.ui.screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,7 +16,6 @@ import com.example.tfg.ui.components.MainScaffold
 import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.LaunchedEffect
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tfg.viewmodel.FlightViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.tfg.ui.navigation.FlightDetail
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FlightScreen(
     auth: FirebaseAuth,
@@ -81,11 +83,7 @@ fun FlightScreen(
 
                 }
             }
-            Text(
-                text = "Flights",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            )
+
         }
 
     }
