@@ -1,6 +1,10 @@
 package com.example.tfg.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,6 +13,7 @@ import com.example.tfg.ui.screen.AddReservationScreen
 import com.example.tfg.ui.screen.FlightDetailScreen
 import com.example.tfg.ui.screen.FlightScreen
 import com.example.tfg.ui.screen.HomeScreen
+import com.example.tfg.ui.screen.InfoReservationScreen
 import com.example.tfg.ui.screen.InitialScreen
 import com.example.tfg.ui.screen.LoginScreen
 import com.example.tfg.ui.screen.ReservationsScreen
@@ -18,6 +23,7 @@ import com.example.tfg.viewmodel.HomeViewModel
 import com.example.tfg.viewmodel.ReservationViewModel
 import com.google.firebase.auth.FirebaseAuth
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationWrapper(auth: FirebaseAuth) {
     val navController = rememberNavController()
@@ -84,6 +90,35 @@ fun NavigationWrapper(auth: FirebaseAuth) {
                 viewModel = reservationsViewModel
             )
         }
+
+        composable("reservationDetail/{reservationId}") { backStackEntry ->
+            val reservationId = backStackEntry.arguments?.getString("reservationId")?.toIntOrNull()
+
+            // Disparar la carga solo cuando reservationId no sea nulo
+            LaunchedEffect(reservationId) {
+                reservationId?.let {
+                    reservationsViewModel.loadReservationInfo(it)
+                }
+            }
+
+            val reservationInfo = reservationsViewModel.reservationInfo.value
+
+            if (reservationInfo != null) {
+                InfoReservationScreen(
+                    reservation = reservationInfo,
+                    auth = auth,
+                    navController = navController,
+                    navigateToHome = { navController.navigate(Home) },
+                    navigateToFlights = { navController.navigate(Flights) },
+                    navigateToReservation = { navController.navigate(Reservations) },
+                    flightviewModel = flightViewModel,
+                )
+            } else {
+                Text("Cargando reserva...")
+            }
+        }
+
+
         composable<AddReservation> {
             AddReservationScreen(
                 auth = auth,

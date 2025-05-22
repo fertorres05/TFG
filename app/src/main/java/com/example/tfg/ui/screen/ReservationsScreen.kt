@@ -87,12 +87,20 @@ fun ReservationsScreen(
 
             LazyColumn(
                 modifier = Modifier
+                    .padding(innerPadding)
                     .fillMaxSize()
                     .fillMaxHeight()
             ) {
-                items(reservations) { item ->
-                    ReservationCard(reservation = item)
+                items(reservations) { reservation ->
+                    ReservationCard(
+                        reservation = reservation,
+                        onClick = {
+                            // Aquí navegas con el id de la reserva
+                            navController.navigate("reservationDetail/${reservation.id_reservation}")
+                        }
+                    )
                 }
+
             }
 
 

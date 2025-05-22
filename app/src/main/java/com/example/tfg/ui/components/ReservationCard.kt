@@ -3,6 +3,7 @@ package com.example.tfg.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,10 +24,11 @@ import com.example.tfg.data.remote.model.ReservationCard
 
 
 @Composable
-fun ReservationCard(reservation: ReservationCard) {
+fun ReservationCard(reservation: ReservationCard,onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .padding(16.dp)
+            .clickable { onClick() }
             .background(Color(0xFFA231B5)) // Color superior
     ) {
 
