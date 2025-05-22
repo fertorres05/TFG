@@ -27,6 +27,9 @@ interface ApiService {
     @POST("/reservation")
     suspend fun addReservation(@Body flight: ReservationRequest): Response <ResponseBody>
 
+    @GET("reservation/{id_reservation}")
+    suspend fun getInfoReservation(@Path("id_reservation") id_reservation: Int): ReservationCard
+
     //Para obtener las reservas de los usuarios
     @GET("user/{uuid}/reservations-summary")
     suspend fun getUserReservations(@Path("uuid") uuid: String): List<ReservationCard>

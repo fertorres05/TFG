@@ -18,8 +18,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.LaunchedEffect
 import com.example.tfg.viewmodel.FlightViewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,16 +73,26 @@ fun FlightScreen(
 
             LazyColumn(
                 modifier = Modifier
-                    .padding(innerPadding)
                     .fillMaxSize()
                     .fillMaxHeight()
+                    .padding(16.dp)
             ) {
-                items(flights) { flight ->
-                    FlightCard(flight = flight, onClick = {
-                        viewModel.selectFlight(flight)
-                        navController.navigate(FlightDetail)
-                    })
+                itemsIndexed(flights) { index, flight ->
+                    val backgroundColor =
+                        if (index % 2 == 0) Color(0xFFD084E7) else Color(0xFFA231B5)
+                    val dividercolor =
+                        if (index % 2 == 0) Color(0xFFA231B5) else Color(0xFFD084E7)
+                    FlightCard(
+                        flight = flight,
+                        onClick = {
+                            viewModel.selectFlight(flight)
+                            navController.navigate(FlightDetail)
+                        },
+                        backgroudColor = backgroundColor,
+                        dividerColor = dividercolor
+                    )
 
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
 

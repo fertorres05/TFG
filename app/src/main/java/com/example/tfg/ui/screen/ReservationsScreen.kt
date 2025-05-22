@@ -87,7 +87,6 @@ fun ReservationsScreen(
 
             LazyColumn(
                 modifier = Modifier
-                    .padding(innerPadding)
                     .fillMaxSize()
                     .fillMaxHeight()
             ) {

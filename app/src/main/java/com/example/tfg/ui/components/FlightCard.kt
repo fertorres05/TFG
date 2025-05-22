@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,10 +53,10 @@ fun formatTime(dateStr: String): String {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FlightCard(flight: FlightCard, onClick: () -> Unit) {
+fun FlightCard(flight: FlightCard, onClick: () -> Unit, backgroudColor: Color,dividerColor:Color) {
     Row(
         modifier = Modifier
-            .background(Color(0xFFD084E7))
+            .background(backgroudColor)
             .fillMaxWidth()
             .height(80.dp)
             .clickable { onClick() } ,
@@ -70,7 +71,7 @@ fun FlightCard(flight: FlightCard, onClick: () -> Unit) {
             Text(flight.code_flight, color = Color.White, fontWeight = FontWeight.Bold)
         }
 
-        VerticalDivider()
+        VerticalDivider(dividerColor)
 
         Row(
             modifier = Modifier.weight(2f).fillMaxHeight(),
@@ -84,7 +85,7 @@ fun FlightCard(flight: FlightCard, onClick: () -> Unit) {
             Text(flight.arrival_airport, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
 
-        VerticalDivider()
+        VerticalDivider(dividerColor)
 
         Column(
             modifier = Modifier
@@ -111,11 +112,11 @@ fun FlightCard(flight: FlightCard, onClick: () -> Unit) {
 }
 
 @Composable
-fun VerticalDivider() {
+fun VerticalDivider(dividerColor:Color) {
     Box(
         modifier = Modifier
             .fillMaxHeight()
             .width(2.dp)
-            .background(Color(0xFF8E24AA)) // Color violeta oscuro para las líneas divisorias
+            .background(dividerColor) // Color violeta oscuro para las líneas divisorias
     )
 }
