@@ -12,6 +12,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -45,6 +46,9 @@ interface ApiService {
     //Obtiene la card de la reserva a la que pertenece el usuario
     @GET("user/flight/{id_reservation}")
     suspend fun getReservationById(@Path("id_reservation") id_reservation: Int): ReservationCard
+
+    @DELETE("reservation/{id_reservation}/flight/{code_flight}")
+    suspend fun deleteFlightFromReservation(@Path("id_reservation") id_reservation: Int, @Path("code_flight") codeFlight: String): Response<Unit>
 
     //Obtiene las estadisticas generales del usuario
     @GET("user/{uuid}/stats/")

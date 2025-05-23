@@ -285,7 +285,7 @@ fun FlightDetailScreen(
                                     val flightCount =
                                         viewModel.selectedReservation.value?.flight_count ?: 0
                                     if (flightCount > 1) {
-                                        viewModel.deleteFlightFromReservation(flight.id_flight)
+                                        viewModel.deleteFlightFromReservation(flight.id_reservation, flight.code_flight)
                                         navController.popBackStack()
                                     } else {
                                         showCannotDeleteDialog.value = true
