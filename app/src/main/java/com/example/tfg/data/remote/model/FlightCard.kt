@@ -1,6 +1,7 @@
 package com.example.tfg.data.remote.model
 
 data class FlightCard(
+    val id_reservation: Int,
     val code_flight: String,
     val departure_date: String,
     val arrival_date: String,

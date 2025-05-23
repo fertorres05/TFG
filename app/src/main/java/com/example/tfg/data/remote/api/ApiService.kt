@@ -1,4 +1,5 @@
 package com.example.tfg.data.remote.api
+
 import com.example.tfg.data.remote.model.FlightCard
 import com.example.tfg.data.remote.model.ReservationCard
 import com.example.tfg.data.remote.model.ReservationInfo
@@ -26,8 +27,10 @@ interface ApiService {
 
     //Para registrar las reservas de los usuarios
     @POST("/reservation")
-    suspend fun addReservation(@Body flight: ReservationRequest): Response <ResponseBody>
+    suspend fun addReservation(@Body flight: ReservationRequest): Response<ResponseBody>
 
+
+    //Obtiene la informacion detallada de una reserva del usuario
     @GET("reservation/{id_reservation}")
     suspend fun getInfoReservation(@Path("id_reservation") id_reservation: Int): ReservationInfo
 
@@ -35,9 +38,15 @@ interface ApiService {
     @GET("user/{uuid}/reservations-summary")
     suspend fun getUserReservations(@Path("uuid") uuid: String): List<ReservationCard>
 
+    //Obtiene los vuelos del usuario
     @GET("user/{uuid}/flights/")
     suspend fun getUserFlights(@Path("uuid") uuid: String): List<FlightCard>
 
+    //Obtiene la card de la reserva a la que pertenece el usuario
+    @GET("user/flight/{id_reservation}")
+    suspend fun getReservationById(@Path("id_reservation") id_reservation: Int): ReservationCard
+
+    //Obtiene las estadisticas generales del usuario
     @GET("user/{uuid}/stats/")
     suspend fun getUserStats(@Path("uuid") uuid: String): UserStats
 

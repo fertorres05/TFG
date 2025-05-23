@@ -8,6 +8,7 @@ import com.example.tfg.data.remote.RetrofitClient
 import com.example.tfg.data.remote.model.FlightCard
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.State
+import com.example.tfg.data.remote.model.ReservationCard
 
 
 // FlightViewModel.kt
@@ -34,5 +35,19 @@ class FlightViewModel : ViewModel() {
     fun selectFlight(flight: FlightCard) {
         selectedFlight.value = flight
     }
+
+    val selectedReservation = mutableStateOf<ReservationCard?>(null)
+
+    fun loadReservation(reservationId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.getReservationById(reservationId)
+                selectedReservation.value = response
+            } catch (e: Exception) {
+                Log.e("FlightViewModel", "Error loading reservation", e)
+            }
+        }
+    }
+
 }
 
