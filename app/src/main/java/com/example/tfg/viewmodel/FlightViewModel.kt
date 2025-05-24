@@ -1,6 +1,8 @@
 package com.example.tfg.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +10,11 @@ import com.example.tfg.data.remote.RetrofitClient
 import com.example.tfg.data.remote.model.FlightCard
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.State
+import com.example.tfg.data.remote.model.LuggageItem
 import com.example.tfg.data.remote.model.ReservationCard
 import com.example.tfg.data.remote.repository.FlightRepository
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 
 // FlightViewModel.kt
@@ -54,6 +59,23 @@ class FlightViewModel : ViewModel() {
         selectedFlight.value = flight
     }
 
+    fun loadFlight(
+        idReservation: Int,
+        codeFlight: String,
+        departureDate: String,
+        arrivalDate: String
+    ) {
+        viewModelScope.launch {
+            try {
+                val flight = repository.getFlightByCode(idReservation,codeFlight, departureDate, arrivalDate)
+                selectedFlight.value = flight
+            } catch (e: Exception) {
+                Log.e("FlightViewModel", "Error loading flight", e)
+            }
+        }
+    }
+
+
     fun deleteFlightFromReservation(id_reservation: Int, codeFlight: String) {
         viewModelScope.launch {
             val result = repository.deleteFlightFromReservation(id_reservation, codeFlight)
@@ -61,8 +83,35 @@ class FlightViewModel : ViewModel() {
         }
     }
 
-    fun clearDeleteResult() {
-        _deleteResult.value = null
+    fun updateFlightDetails(
+        idReservation: Int,
+        codeFlight: String,
+        newCost: Double,
+        newPassengers: Int,
+        newLuggage: List<LuggageItem>,
+        departureDate: String,
+        arrivalDate: String
+    ) {
+        viewModelScope.launch {
+
+            try {
+                repository.updateFlightDetails(
+                    idReservation,
+                    codeFlight,
+                    newCost,
+                    newPassengers,
+                    departureDate,
+                    arrivalDate,
+                    newLuggage
+                )
+                // Podrías volver a cargar la reserva si quieres reflejar los cambios en UI
+                loadReservation(idReservation)
+                loadFlight(idReservation,codeFlight, departureDate, arrivalDate)
+
+            } catch (e: Exception) {
+                Log.e("FlightViewModel", "Error updating flight", e)
+            }
+        }
     }
 }
 

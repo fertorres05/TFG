@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,25 +21,49 @@ import com.example.tfg.ui.theme.DarkText
 import com.example.tfg.ui.theme.Pink80
 
 @Composable
-fun BaggageOptionList(onBaggageChange: (Map<String, Int>) -> Unit) {
-    val baggageTypes = listOf("Suitcase 10kg", "Checked baggage 10kg", "Checked baggage 20kg", "Special luggage")
-    val baggageCounts = remember { mutableStateMapOf<String, Int>().apply { baggageTypes.forEach { this[it] = 0 } } }
+fun BaggageOptionList(
+    initialValues: Map<String, Int> = emptyMap(),
+    onBaggageChange: (Map<String, Int>) -> Unit
+) {
+    val baggageState = remember { mutableStateMapOf<String, Int>().apply { putAll(initialValues) } }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        baggageTypes.forEach { type ->
-            BaggageItem(type, baggageCounts[type] ?: 0) { newCount ->
-                baggageCounts[type] = newCount
-                onBaggageChange(baggageCounts.toMap())
+    // Lista de tipos de equipaje disponibles
+    val types = listOf("Suitcase 10kg", "Checked baggage 10kg", "Checked baggage 20kg", "Special luggage")
+
+    Column {
+        types.forEach { type ->
+            val count = baggageState[type] ?: 0
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            ) {
+                Text(type, modifier = Modifier.weight(1f))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
+                        if (count > 0) {
+                            baggageState[type] = count - 1
+                            onBaggageChange(baggageState.toMap())
+                        }
+                    }) {
+                        Text("-", fontSize = 20.sp)
+                    }
+                    Text(count.toString(), modifier = Modifier.padding(horizontal = 8.dp))
+                    IconButton(onClick = {
+                        baggageState[type] = count + 1
+                        onBaggageChange(baggageState.toMap())
+                    }) {
+                        Text("+", fontSize = 20.sp)
+                    }
+                }
             }
         }
     }
 }
-
 
 
 @Composable
