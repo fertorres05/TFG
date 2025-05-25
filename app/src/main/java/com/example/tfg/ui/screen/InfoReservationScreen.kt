@@ -1,5 +1,6 @@
 package com.example.tfg.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +38,7 @@ import com.example.tfg.ui.components.FlightCard
 import com.example.tfg.ui.components.MainScaffold
 import com.example.tfg.ui.navigation.FlightDetail
 import com.example.tfg.viewmodel.FlightViewModel
+import com.example.tfg.viewmodel.ReservationViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -41,9 +49,11 @@ fun InfoReservationScreen(
     navigateToHome: () -> Unit,
     navigateToReservation: () -> Unit,
     navigateToFlights: () -> Unit,
-    flightviewModel: FlightViewModel
+    flightviewModel: FlightViewModel,
+    reservationViewModel: ReservationViewModel
 
 ) {
+    val showDeleteDialog = remember { mutableStateOf(false) }
 
     MainScaffold(
         navigateToHome = navigateToHome,
@@ -60,6 +70,8 @@ fun InfoReservationScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Header con nombre de la reserva
+            Log.d("INFO_RESERVATION", "ID de la reserva: ${reservation.id_reservation}")
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -119,14 +131,24 @@ fun InfoReservationScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Header Flights
-            Box(
-                modifier = Modifier
-                    .background(Color(0xFFE090E6))
-                    .padding(vertical = 8.dp, horizontal = 24.dp)
-            ) {
-                Text("FLIGHTS", fontWeight = FontWeight.Bold, color = Color.White)
+            Row {
+                Box(
+                    modifier = Modifier
+                        .background(Color(0xFFE090E6))
+                        .padding(vertical = 8.dp, horizontal = 24.dp)
+                ) {
+                    Text("FLIGHTS", fontWeight = FontWeight.Bold, color = Color.White)
+                }
+
+                Button(
+                    onClick = { showDeleteDialog.value = true },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("DELETE", color = Color.White)
+                }
             }
+
+            // Header Flights
 
             Spacer(modifier = Modifier.height(16.dp))
             println("Reservation completa: $reservation")
@@ -156,5 +178,30 @@ fun InfoReservationScreen(
             }
 
         }
+    }
+    if (showDeleteDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog.value = false },
+            title = { Text("Confirmar eliminación") },
+            text = { Text("¿Estás seguro que quieres borrar esta reserva y todos sus vuelos relacionadis?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog.value = false
+                        reservationViewModel.deleteReservation(
+                                reservation.id_reservation,
+                            )
+                            navController.popBackStack()
+                    }
+                ) {
+                    Text("Sí")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog.value = false }) {
+                    Text("No")
+                }
+            }
+        )
     }
 }

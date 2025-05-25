@@ -98,6 +98,7 @@ fun NavigationWrapper(auth: FirebaseAuth) {
             LaunchedEffect(reservationId) {
                 reservationId?.let {
                     reservationsViewModel.loadReservationInfo(it)
+                    reservationsViewModel.loadReservationInfo(it)
                 }
             }
 
@@ -112,6 +113,7 @@ fun NavigationWrapper(auth: FirebaseAuth) {
                     navigateToFlights = { navController.navigate(Flights) },
                     navigateToReservation = { navController.navigate(Reservations) },
                     flightviewModel = flightViewModel,
+                    reservationViewModel = reservationsViewModel,
                 )
             } else {
                 Text("Cargando reserva...")

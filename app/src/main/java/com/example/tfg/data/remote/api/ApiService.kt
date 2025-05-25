@@ -77,6 +77,11 @@ interface ApiService {
         @Path("code_flight") codeFlight: String
     ): Response<Unit>
 
+    @DELETE("reservation/{id_reservation}")
+    suspend fun deleteReservation(@Path("id_reservation") id_reservation: String): Response<Unit>
+
+
+
     //Obtiene las estadisticas generales del usuario
     @GET("user/{uuid}/stats/")
     suspend fun getUserStats(@Path("uuid") uuid: String): UserStats

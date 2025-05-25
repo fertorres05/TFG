@@ -8,14 +8,22 @@ import androidx.lifecycle.viewModelScope
 import com.example.tfg.data.remote.RetrofitClient
 import com.example.tfg.data.remote.model.ReservationCard
 import com.example.tfg.data.remote.model.ReservationInfo
+import com.example.tfg.data.remote.repository.ReservationRepository
 import kotlinx.coroutines.launch
 
 class ReservationViewModel: ViewModel() {
+
+    private val repository = ReservationRepository()
+
+
     private val _reservation = mutableStateOf<List<ReservationCard>>(emptyList())
     val reservations: State<List<ReservationCard>> = _reservation
 
     private val _reservationInfo = mutableStateOf<ReservationInfo?>(null)
     val reservationInfo: State<ReservationInfo?> = _reservationInfo
+
+
+    private val _deleteResult = mutableStateOf<Result<Unit>?>(null)
 
     fun loadReservations(uuid: String) {
         viewModelScope.launch {
@@ -38,4 +46,12 @@ class ReservationViewModel: ViewModel() {
             }
         }
     }
+
+    fun deleteReservation(id_reservation: String) {
+        viewModelScope.launch {
+            val result = repository.deleteReservation(id_reservation)
+            _deleteResult.value = result
+        }
+    }
+
 }
