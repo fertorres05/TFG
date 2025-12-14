@@ -41,5 +41,5 @@ El objetivo es ofrecer una herramienta sencilla y completa para la organización
 ---
 
 ## Documentación
-[Ver memoria del TFG, que contiene toda la información detallada de la aplicación](MemoriaTFG.pdf)
-[Estructura de la base de datos PostgresSql](estructura_db.sql)
+- [Ver memoria del TFG, que contiene toda la información detallada de la aplicación](MemoriaTFG.pdf)
+- [Estructura de la base de datos PostgresSql](estructura_db.sql)
